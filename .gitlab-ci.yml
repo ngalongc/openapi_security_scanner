@@ -1,0 +1,45 @@
+image: python:latest
+
+stages:
+  - first
+  - second
+  - third
+
+download-old-result:
+  except:
+    - pushes
+  stage: first
+  allow_failure: true
+  script:
+    - 'curl --location --header "PRIVATE-TOKEN: $PRIVATE_TOKEN" --output artifacts.zip "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/master/download?job=get-new-result"'
+    - file artifacts.zip
+    - unzip artifacts.zip
+    - mv sample.html old_sample.html
+  artifacts:
+    paths:
+      - old_sample.html
+
+get-new-result:
+  except:
+    - pushes
+  stage: second
+  allow_failure: true  
+  script:
+    - pip install -r requirements.txt
+    - python openapi_security_scanner.py
+  artifacts:
+    paths:
+      - sample.html
+
+compare:
+  except:
+    - pushes
+  stage: third
+  allow_failure: true
+  script:
+    - ls -asl
+    - diff sample.html old_sample.html > changes.diff
+    - if [[ -s changes.diff ]]; then echo "file has something, integrate a way to notify yourself"; else echo "file is empty"; fi
+  artifacts:
+    paths:
+      - changes.diff
