@@ -171,7 +171,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Ron Chan - [@ngalongc](https://twitter.com/ngalongc)
 
-Project Link: [https://gitlab.com/ngalog-gitlab/openapi_security_scanner](https://gitlab.com.com/ngalog-gitlab/openapi_security_scanner)
+Project Link: [https://gitlab.com/ngalog-gitlab/openapi_security_scanner](https://gitlab.com/ngalog-gitlab/openapi_security_scanner)
 
 
 
