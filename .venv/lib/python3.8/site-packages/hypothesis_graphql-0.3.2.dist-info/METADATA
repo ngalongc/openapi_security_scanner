@@ -1,0 +1,99 @@
+Metadata-Version: 2.1
+Name: hypothesis-graphql
+Version: 0.3.2
+Summary: Hypothesis strategies for GraphQL schemas and queries
+Home-page: https://github.com/Stranger6667/hypothesis-graphql
+License: MIT
+Keywords: hypothesis,graphql,testing
+Author: Dmitry Dygalo
+Author-email: dadygalo@gmail.com
+Requires-Python: >=3.6,<4.0
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Environment :: Console
+Classifier: Framework :: Hypothesis
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Topic :: Software Development :: Testing
+Requires-Dist: graphql-core (>=3.1.0,<4.0.0)
+Requires-Dist: hypothesis (>=5.8.0,<6.0.0)
+Project-URL: Repository, https://github.com/Stranger6667/hypothesis-graphql
+Description-Content-Type: text/x-rst
+
+hypothesis-graphql
+==================
+
+|Build| |Coverage| |Version| |Python versions| |Chat| |License|
+
+Hypothesis strategies for GraphQL schemas, queries and data.
+
+**NOTE** This package is experimental, some features are not supported yet.
+
+Usage
+-----
+
+There are two strategies for different use cases.
+
+1. Schema generation - ``hypothesis_graphql.strategies.schema()``
+2. Query - ``hypothesis_graphql.strategies.query(schema)``.
+
+Lets take this schema as an example:
+
+.. code::
+
+    type Book {
+      title: String
+      author: Author
+    }
+
+    type Author {
+      name: String
+      books: [Book]
+    }
+
+    type Query {
+      getBooks: [Book]
+      getAuthors: [Author]
+    }
+
+Then strategies might be used in this way:
+
+.. code:: python
+
+    from hypothesis import given
+    from hypothesis_graphql import strategies as gql_st
+
+    SCHEMA = "..."  # the one above
+
+    @given(query=gql_st.query(SCHEMA))
+    def test_query(query):
+        ...
+        # This query might be generated:
+        #
+        # query {
+        #   getBooks {
+        #     title
+        #   }
+        # }
+
+.. |Build| image:: https://github.com/Stranger6667/hypothesis-graphql/workflows/build/badge.svg
+   :target: https://github.com/Stranger6667/hypothesis-graphql/actions
+.. |Coverage| image:: https://codecov.io/gh/Stranger6667/hypothesis-graphql/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/Stranger6667/hypothesis-graphql/branch/master
+   :alt: codecov.io status for master branch
+.. |Version| image:: https://img.shields.io/pypi/v/hypothesis-graphql.svg
+   :target: https://pypi.org/project/hypothesis-graphql/
+.. |Python versions| image:: https://img.shields.io/pypi/pyversions/hypothesis-graphql.svg
+   :target: https://pypi.org/project/hypothesis-graphql/
+.. |Chat| image:: https://img.shields.io/gitter/room/Stranger6667/hypothesis-graphql.svg
+   :target: https://gitter.im/Stranger6667/hypothesis-graphql
+   :alt: Gitter
+.. |License| image:: https://img.shields.io/pypi/l/hypothesis-graphql.svg
+   :target: https://opensource.org/licenses/MIT
+
